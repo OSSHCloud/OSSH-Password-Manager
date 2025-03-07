@@ -1,47 +1,47 @@
 <?php
 /*
-Plugin Name: Custom Password Manager
+Plugin Name: OSSH Password Manager
 Description: A plugin to manage passwords with custom post type and taxonomy.
 Version: 1.0
 Author: Your Name
 */
 
 // Register Custom Post Type
-function cpm_register_password_post_type() {
+function opm_register_password_post_type() {
     $labels = array(
-        'name'                  => _x( 'Passwords', 'Post Type General Name', 'custom-password-manager' ),
-        'singular_name'         => _x( 'Password', 'Post Type Singular Name', 'custom-password-manager' ),
-        'menu_name'             => __( 'Passwords', 'custom-password-manager' ),
-        'name_admin_bar'        => __( 'Password', 'custom-password-manager' ),
-        'archives'              => __( 'Password Archives', 'custom-password-manager' ),
-        'attributes'            => __( 'Password Attributes', 'custom-password-manager' ),
-        'parent_item_colon'     => __( 'Parent Password:', 'custom-password-manager' ),
-        'all_items'             => __( 'All Passwords', 'custom-password-manager' ),
-        'add_new_item'          => __( 'Add New Password', 'custom-password-manager' ),
-        'add_new'               => __( 'Add New', 'custom-password-manager' ),
-        'new_item'              => __( 'New Password', 'custom-password-manager' ),
-        'edit_item'             => __( 'Edit Password', 'custom-password-manager' ),
-        'update_item'           => __( 'Update Password', 'custom-password-manager' ),
-        'view_item'             => __( 'View Password', 'custom-password-manager' ),
-        'view_items'            => __( 'View Passwords', 'custom-password-manager' ),
-        'search_items'          => __( 'Search Password', 'custom-password-manager' ),
-        'not_found'             => __( 'Not found', 'custom-password-manager' ),
-        'not_found_in_trash'    => __( 'Not found in Trash', 'custom-password-manager' ),
-        'featured_image'        => __( 'Featured Image', 'custom-password-manager' ),
-        'set_featured_image'    => __( 'Set featured image', 'custom-password-manager' ),
-        'remove_featured_image' => __( 'Remove featured image', 'custom-password-manager' ),
-        'use_featured_image'    => __( 'Use as featured image', 'custom-password-manager' ),
-        'insert_into_item'      => __( 'Insert into password', 'custom-password-manager' ),
-        'uploaded_to_this_item' => __( 'Uploaded to this password', 'custom-password-manager' ),
-        'items_list'            => __( 'Passwords list', 'custom-password-manager' ),
-        'items_list_navigation' => __( 'Passwords list navigation', 'custom-password-manager' ),
-        'filter_items_list'     => __( 'Filter passwords list', 'custom-password-manager' ),
+        'name'                  => _x( 'Passwords', 'Post Type General Name', 'ossh-password-manager' ),
+        'singular_name'         => _x( 'Password', 'Post Type Singular Name', 'ossh-password-manager' ),
+        'menu_name'             => __( 'Passwords', 'ossh-password-manager' ),
+        'name_admin_bar'        => __( 'Password', 'ossh-password-manager' ),
+        'archives'              => __( 'Password Archives', 'ossh-password-manager' ),
+        'attributes'            => __( 'Password Attributes', 'ossh-password-manager' ),
+        'parent_item_colon'     => __( 'Parent Password:', 'ossh-password-manager' ),
+        'all_items'             => __( 'All Passwords', 'ossh-password-manager' ),
+        'add_new_item'          => __( 'Add New Password', 'ossh-password-manager' ),
+        'add_new'               => __( 'Add New', 'ossh-password-manager' ),
+        'new_item'              => __( 'New Password', 'ossh-password-manager' ),
+        'edit_item'             => __( 'Edit Password', 'ossh-password-manager' ),
+        'update_item'           => __( 'Update Password', 'ossh-password-manager' ),
+        'view_item'             => __( 'View Password', 'ossh-password-manager' ),
+        'view_items'            => __( 'View Passwords', 'ossh-password-manager' ),
+        'search_items'          => __( 'Search Password', 'ossh-password-manager' ),
+        'not_found'             => __( 'Not found', 'ossh-password-manager' ),
+        'not_found_in_trash'    => __( 'Not found in Trash', 'ossh-password-manager' ),
+        'featured_image'        => __( 'Featured Image', 'ossh-password-manager' ),
+        'set_featured_image'    => __( 'Set featured image', 'ossh-password-manager' ),
+        'remove_featured_image' => __( 'Remove featured image', 'ossh-password-manager' ),
+        'use_featured_image'    => __( 'Use as featured image', 'ossh-password-manager' ),
+        'insert_into_item'      => __( 'Insert into password', 'ossh-password-manager' ),
+        'uploaded_to_this_item' => __( 'Uploaded to this password', 'ossh-password-manager' ),
+        'items_list'            => __( 'Passwords list', 'ossh-password-manager' ),
+        'items_list_navigation' => __( 'Passwords list navigation', 'ossh-password-manager' ),
+        'filter_items_list'     => __( 'Filter passwords list', 'ossh-password-manager' ),
     );
     $args = array(
-        'label'                 => __( 'Password', 'custom-password-manager' ),
-        'description'           => __( 'Password post type', 'custom-password-manager' ),
+        'label'                 => __( 'Password', 'ossh-password-manager' ),
+        'description'           => __( 'Password post type', 'ossh-password-manager' ),
         'labels'                => $labels,
-        'supports'              => array(), // Remove 'title' and 'editor' from supports
+        'supports'              => array(), // Remove all default supports
         'taxonomies'            => array( 'password_category' ),
         'hierarchical'          => false,
         'public'                => true,
@@ -58,31 +58,38 @@ function cpm_register_password_post_type() {
     );
     register_post_type( 'password', $args );
 }
-add_action( 'init', 'cpm_register_password_post_type', 0 );
+add_action( 'init', 'opm_register_password_post_type', 0 );
+
+// Remove Title and Editor Support
+function opm_remove_password_supports() {
+    remove_post_type_support( 'password', 'title' );
+    remove_post_type_support( 'password', 'editor' );
+}
+add_action( 'init', 'opm_remove_password_supports' );
 
 // Register Custom Taxonomy
-function cpm_register_password_category_taxonomy() {
+function opm_register_password_category_taxonomy() {
     $labels = array(
-        'name'                       => _x( 'Password Categories', 'Taxonomy General Name', 'custom-password-manager' ),
-        'singular_name'              => _x( 'Password Category', 'Taxonomy Singular Name', 'custom-password-manager' ),
-        'menu_name'                  => __( 'Password Category', 'custom-password-manager' ),
-        'all_items'                  => __( 'All Categories', 'custom-password-manager' ),
-        'parent_item'                => __( 'Parent Category', 'custom-password-manager' ),
-        'parent_item_colon'          => __( 'Parent Category:', 'custom-password-manager' ),
-        'new_item_name'             => __( 'New Category Name', 'custom-password-manager' ),
-        'add_new_item'               => __( 'Add New Category', 'custom-password-manager' ),
-        'edit_item'                 => __( 'Edit Category', 'custom-password-manager' ),
-        'update_item'               => __( 'Update Category', 'custom-password-manager' ),
-        'view_item'                 => __( 'View Category', 'custom-password-manager' ),
-        'separate_items_with_commas' => __( 'Separate categories with commas', 'custom-password-manager' ),
-        'add_or_remove_items'        => __( 'Add or remove categories', 'custom-password-manager' ),
-        'choose_from_most_used'     => __( 'Choose from the most used', 'custom-password-manager' ),
-        'popular_items'             => __( 'Popular Categories', 'custom-password-manager' ),
-        'search_items'              => __( 'Search Categories', 'custom-password-manager' ),
-        'not_found'                 => __( 'Not Found', 'custom-password-manager' ),
-        'no_terms'                  => __( 'No categories', 'custom-password-manager' ),
-        'items_list'                => __( 'Categories list', 'custom-password-manager' ),
-        'items_list_navigation'     => __( 'Categories list navigation', 'custom-password-manager' ),
+        'name'                       => _x( 'Password Categories', 'Taxonomy General Name', 'ossh-password-manager' ),
+        'singular_name'              => _x( 'Password Category', 'Taxonomy Singular Name', 'ossh-password-manager' ),
+        'menu_name'                  => __( 'Password Category', 'ossh-password-manager' ),
+        'all_items'                  => __( 'All Categories', 'ossh-password-manager' ),
+        'parent_item'                => __( 'Parent Category', 'ossh-password-manager' ),
+        'parent_item_colon'          => __( 'Parent Category:', 'ossh-password-manager' ),
+        'new_item_name'             => __( 'New Category Name', 'ossh-password-manager' ),
+        'add_new_item'               => __( 'Add New Category', 'ossh-password-manager' ),
+        'edit_item'                 => __( 'Edit Category', 'ossh-password-manager' ),
+        'update_item'               => __( 'Update Category', 'ossh-password-manager' ),
+        'view_item'                 => __( 'View Category', 'ossh-password-manager' ),
+        'separate_items_with_commas' => __( 'Separate categories with commas', 'ossh-password-manager' ),
+        'add_or_remove_items'        => __( 'Add or remove categories', 'ossh-password-manager' ),
+        'choose_from_most_used'     => __( 'Choose from the most used', 'ossh-password-manager' ),
+        'popular_items'             => __( 'Popular Categories', 'ossh-password-manager' ),
+        'search_items'              => __( 'Search Categories', 'ossh-password-manager' ),
+        'not_found'                 => __( 'Not Found', 'ossh-password-manager' ),
+        'no_terms'                  => __( 'No categories', 'ossh-password-manager' ),
+        'items_list'                => __( 'Categories list', 'ossh-password-manager' ),
+        'items_list_navigation'     => __( 'Categories list navigation', 'ossh-password-manager' ),
     );
     $args = array(
         'labels'                     => $labels,
@@ -95,14 +102,14 @@ function cpm_register_password_category_taxonomy() {
     );
     register_taxonomy( 'password_category', array( 'password' ), $args );
 }
-add_action( 'init', 'cpm_register_password_category_taxonomy', 0 );
+add_action( 'init', 'opm_register_password_category_taxonomy', 0 );
 
 // Add Custom Fields
-function cpm_add_password_meta_boxes() {
+function opm_add_password_meta_boxes() {
     add_meta_box(
         'password_email',
-        __( 'Email', 'custom-password-manager' ),
-        'cpm_password_email_callback',
+        __( 'Email', 'ossh-password-manager' ),
+        'opm_password_email_callback',
         'password',
         'normal',
         'high'
@@ -110,34 +117,34 @@ function cpm_add_password_meta_boxes() {
 
     add_meta_box(
         'password_password',
-        __( 'Password', 'custom-password-manager' ),
-        'cpm_password_password_callback',
+        __( 'Password', 'ossh-password-manager' ),
+        'opm_password_password_callback',
         'password',
         'normal',
         'high'
     );
 }
-add_action( 'add_meta_boxes', 'cpm_add_password_meta_boxes' );
+add_action( 'add_meta_boxes', 'opm_add_password_meta_boxes' );
 
-function cpm_password_email_callback( $post ) {
-    wp_nonce_field( 'cpm_password_email_nonce', 'cpm_password_email_nonce' );
+function opm_password_email_callback( $post ) {
+    wp_nonce_field( 'opm_password_email_nonce', 'opm_password_email_nonce' );
     $value = get_post_meta( $post->ID, '_password_email', true );
     echo '<input type="email" id="password_email" name="password_email" value="' . esc_attr( $value ) . '" size="25" />';
 }
 
-function cpm_password_password_callback( $post ) {
-    wp_nonce_field( 'cpm_password_password_nonce', 'cpm_password_password_nonce' );
+function opm_password_password_callback( $post ) {
+    wp_nonce_field( 'opm_password_password_nonce', 'opm_password_password_nonce' );
     $value = get_post_meta( $post->ID, '_password_password', true );
     echo '<input type="text" id="password_password" name="password_password" value="' . esc_attr( $value ) . '" size="25" />';
 }
 
 // Save Custom Fields
-function cpm_save_password_meta( $post_id ) {
-    if ( ! isset( $_POST['cpm_password_email_nonce'] ) || ! isset( $_POST['cpm_password_password_nonce'] ) ) {
+function opm_save_password_meta( $post_id ) {
+    if ( ! isset( $_POST['opm_password_email_nonce'] ) || ! isset( $_POST['opm_password_password_nonce'] ) ) {
         return;
     }
 
-    if ( ! wp_verify_nonce( $_POST['cpm_password_email_nonce'], 'cpm_password_email_nonce' ) || ! wp_verify_nonce( $_POST['cpm_password_password_nonce'], 'cpm_password_password_nonce' ) ) {
+    if ( ! wp_verify_nonce( $_POST['opm_password_email_nonce'], 'opm_password_email_nonce' ) || ! wp_verify_nonce( $_POST['opm_password_password_nonce'], 'opm_password_password_nonce' ) ) {
         return;
     }
 
@@ -157,4 +164,4 @@ function cpm_save_password_meta( $post_id ) {
         update_post_meta( $post_id, '_password_password', sanitize_text_field( $_POST['password_password'] ) );
     }
 }
-add_action( 'save_post', 'cpm_save_password_meta' );
+add_action( 'save_post', 'opm_save_password_meta' );
