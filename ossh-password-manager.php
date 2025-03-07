@@ -3,7 +3,7 @@
 Plugin Name: OSSH Password Manager
 Description: A plugin to manage passwords with custom post type and taxonomy.
 Version: 1.0
-Author: Your Name
+Author: Muhammad Owais Nizami
 */
 
 // Register Custom Post Type
