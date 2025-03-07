@@ -7,7 +7,7 @@ Author: Muhammad Owais Nizami
 */
 
 // Register Custom Post Type
-function opm_register_password_post_type() {
+function ossh_pm_register_ossh_password_post_type() {
     $labels = array(
         'name'                  => _x( 'Passwords', 'Post Type General Name', 'ossh-password-manager' ),
         'singular_name'         => _x( 'Password', 'Post Type Singular Name', 'ossh-password-manager' ),
@@ -42,7 +42,7 @@ function opm_register_password_post_type() {
         'description'           => __( 'Password post type', 'ossh-password-manager' ),
         'labels'                => $labels,
         'supports'              => array(), // Remove all default supports
-        'taxonomies'            => array( 'password_category' ),
+        'taxonomies'            => array( 'ossh_password_category' ),
         'hierarchical'          => false,
         'public'                => true,
         'show_ui'               => true,
@@ -56,19 +56,19 @@ function opm_register_password_post_type() {
         'publicly_queryable'    => true,
         'capability_type'       => 'post',
     );
-    register_post_type( 'password', $args );
+    register_post_type( 'ossh_password', $args );
 }
-add_action( 'init', 'opm_register_password_post_type', 0 );
+add_action( 'init', 'ossh_pm_register_ossh_password_post_type', 0 );
 
 // Remove Title and Editor Support
-function opm_remove_password_supports() {
-    remove_post_type_support( 'password', 'title' );
-    remove_post_type_support( 'password', 'editor' );
+function ossh_pm_remove_ossh_password_supports() {
+    remove_post_type_support( 'ossh_password', 'title' );
+    remove_post_type_support( 'ossh_password', 'editor' );
 }
-add_action( 'init', 'opm_remove_password_supports' );
+add_action( 'init', 'ossh_pm_remove_ossh_password_supports' );
 
 // Register Custom Taxonomy
-function opm_register_password_category_taxonomy() {
+function ossh_pm_register_ossh_password_category_taxonomy() {
     $labels = array(
         'name'                       => _x( 'Password Categories', 'Taxonomy General Name', 'ossh-password-manager' ),
         'singular_name'              => _x( 'Password Category', 'Taxonomy Singular Name', 'ossh-password-manager' ),
@@ -100,51 +100,51 @@ function opm_register_password_category_taxonomy() {
         'show_in_nav_menus'          => true,
         'show_tagcloud'              => true,
     );
-    register_taxonomy( 'password_category', array( 'password' ), $args );
+    register_taxonomy( 'ossh_password_category', array( 'ossh_password' ), $args );
 }
-add_action( 'init', 'opm_register_password_category_taxonomy', 0 );
+add_action( 'init', 'ossh_pm_register_ossh_password_category_taxonomy', 0 );
 
 // Add Custom Fields
-function opm_add_password_meta_boxes() {
+function ossh_pm_add_ossh_password_meta_boxes() {
     add_meta_box(
-        'password_email',
+        'ossh_password_email',
         __( 'Email', 'ossh-password-manager' ),
-        'opm_password_email_callback',
-        'password',
+        'ossh_pm_password_email_callback',
+        'ossh_password',
         'normal',
         'high'
     );
 
     add_meta_box(
-        'password_password',
+        'ossh_password_password',
         __( 'Password', 'ossh-password-manager' ),
-        'opm_password_password_callback',
-        'password',
+        'ossh_pm_password_password_callback',
+        'ossh_password',
         'normal',
         'high'
     );
 }
-add_action( 'add_meta_boxes', 'opm_add_password_meta_boxes' );
+add_action( 'add_meta_boxes', 'ossh_pm_add_ossh_password_meta_boxes' );
 
-function opm_password_email_callback( $post ) {
-    wp_nonce_field( 'opm_password_email_nonce', 'opm_password_email_nonce' );
+function ossh_pm_password_email_callback( $post ) {
+    wp_nonce_field( 'ossh_pm_password_email_nonce', 'ossh_pm_password_email_nonce' );
     $value = get_post_meta( $post->ID, '_password_email', true );
-    echo '<input type="email" id="password_email" name="password_email" value="' . esc_attr( $value ) . '" size="25" />';
+    echo '<input type="email" id="ossh_password_email" name="ossh_password_email" value="' . esc_attr( $value ) . '" size="25" />';
 }
 
-function opm_password_password_callback( $post ) {
-    wp_nonce_field( 'opm_password_password_nonce', 'opm_password_password_nonce' );
+function ossh_pm_password_password_callback( $post ) {
+    wp_nonce_field( 'ossh_pm_password_password_nonce', 'ossh_pm_password_password_nonce' );
     $value = get_post_meta( $post->ID, '_password_password', true );
-    echo '<input type="text" id="password_password" name="password_password" value="' . esc_attr( $value ) . '" size="25" />';
+    echo '<input type="text" id="ossh_password_password" name="ossh_password_password" value="' . esc_attr( $value ) . '" size="25" />';
 }
 
 // Save Custom Fields
-function opm_save_password_meta( $post_id ) {
-    if ( ! isset( $_POST['opm_password_email_nonce'] ) || ! isset( $_POST['opm_password_password_nonce'] ) ) {
+function ossh_pm_save_ossh_password_meta( $post_id ) {
+    if ( ! isset( $_POST['ossh_pm_password_email_nonce'] ) || ! isset( $_POST['ossh_pm_password_password_nonce'] ) ) {
         return;
     }
 
-    if ( ! wp_verify_nonce( $_POST['opm_password_email_nonce'], 'opm_password_email_nonce' ) || ! wp_verify_nonce( $_POST['opm_password_password_nonce'], 'opm_password_password_nonce' ) ) {
+    if ( ! wp_verify_nonce( $_POST['ossh_pm_password_email_nonce'], 'ossh_pm_password_email_nonce' ) || ! wp_verify_nonce( $_POST['ossh_pm_password_password_nonce'], 'ossh_pm_password_password_nonce' ) ) {
         return;
     }
 
@@ -156,12 +156,12 @@ function opm_save_password_meta( $post_id ) {
         return;
     }
 
-    if ( isset( $_POST['password_email'] ) ) {
-        update_post_meta( $post_id, '_password_email', sanitize_email( $_POST['password_email'] ) );
+    if ( isset( $_POST['ossh_password_email'] ) ) {
+        update_post_meta( $post_id, '_password_email', sanitize_email( $_POST['ossh_password_email'] ) );
     }
 
-    if ( isset( $_POST['password_password'] ) ) {
-        update_post_meta( $post_id, '_password_password', sanitize_text_field( $_POST['password_password'] ) );
+    if ( isset( $_POST['ossh_password_password'] ) ) {
+        update_post_meta( $post_id, '_password_password', sanitize_text_field( $_POST['ossh_password_password'] ) );
     }
 }
-add_action( 'save_post', 'opm_save_password_meta' );
+add_action( 'save_post', 'ossh_pm_save_ossh_password_meta' );
