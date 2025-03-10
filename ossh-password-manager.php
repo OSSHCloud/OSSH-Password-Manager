@@ -123,6 +123,15 @@ function ossh_pm_add_ossh_password_meta_boxes() {
         'normal',
         'high'
     );
+
+    add_meta_box(
+        'ossh_website_meta_box', 
+        __( 'Select Website', 'ossh-password-manager' ), 
+        'ossh_pm_password_website_callback', 
+        'ossh_password', 
+        'normal', 
+        'high'
+    );
 }
 add_action( 'add_meta_boxes', 'ossh_pm_add_ossh_password_meta_boxes' );
 
@@ -136,6 +145,26 @@ function ossh_pm_password_password_callback( $post ) {
     wp_nonce_field( 'ossh_pm_password_password_nonce', 'ossh_pm_password_password_nonce' );
     $value = get_post_meta( $post->ID, '_password_password', true );
     echo '<input type="text" id="ossh_password_password" name="ossh_password_password" value="' . esc_attr( $value ) . '" size="25" />';
+}
+
+function ossh_pm_password_website_callback($post) {
+    $selected_website = get_post_meta($post->ID, 'ossh_password_website', true);
+
+    // Get all ossh_website posts
+    $websites = get_posts(array(
+        'post_type'      => 'ossh_website',
+        'posts_per_page' => -1
+    ));
+
+    echo '<label for="ossh_password_website">Select Website:</label>';
+    echo '<select name="ossh_password_website" id="ossh_password_website">';
+    echo '<option value="">Select a website</option>';
+
+    foreach ($websites as $website) {
+        echo '<option value="' . esc_attr($website->ID) . '" ' . selected($selected_website, $website->ID, false) . '>' . esc_html($website->post_title) . '</option>';
+    }
+
+    echo '</select>';
 }
 
 // Save Custom Fields
@@ -157,11 +186,15 @@ function ossh_pm_save_ossh_password_meta( $post_id ) {
     }
 
     if ( isset( $_POST['ossh_password_email'] ) ) {
-        update_post_meta( $post_id, '_password_email', sanitize_email( $_POST['ossh_password_email'] ) );
+        update_post_meta( $post_id, 'ossh_password_email', sanitize_email( $_POST['ossh_password_email'] ) );
     }
 
     if ( isset( $_POST['ossh_password_password'] ) ) {
-        update_post_meta( $post_id, '_password_password', sanitize_text_field( $_POST['ossh_password_password'] ) );
+        update_post_meta( $post_id, 'ossh_password_password', sanitize_text_field( $_POST['ossh_password_password'] ) );
+    }
+
+    if ( isset( $_POST['ossh_password_website'] ) ) {
+        update_post_meta( $post_id, 'ossh_password_website', sanitize_text_field( $_POST['ossh_password_website'] ) );
     }
 }
 add_action( 'save_post', 'ossh_pm_save_ossh_password_meta' );
